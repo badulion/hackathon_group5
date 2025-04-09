@@ -14,11 +14,13 @@ class B1HomogeneityCost(BaseCost):
     def calculate_cost(self, simulation_data: SimulationData) -> float:
         b1_field = self.b1_calculator(simulation_data)
         subject = simulation_data.subject
-        
+
         b1_field_abs = np.abs(b1_field)
         b1_field_subject_voxels = b1_field_abs[subject]
-        
-        sar = SARCalculator(simulation_data)
-        
-        l = 0.2
-        return ((np.mean(b1_field_subject_voxels)/np.std(b1_field_subject_voxels)) - l * np.max(sar) )
+
+        sar = SARCalculator().calculate_sar(simulation_data)
+
+        lambda_l = 0.2
+        return (
+            np.mean(b1_field_subject_voxels) / np.std(b1_field_subject_voxels)
+        ) - lambda_l * np.max(sar)
