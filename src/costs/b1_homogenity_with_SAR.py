@@ -5,7 +5,7 @@ from ..data.utils import B1Calculator, SARCalculator
 import numpy as np
 
 
-class B1HomogeneityCost(BaseCost):
+class B1HomogeneityCostSAR(BaseCost):
     def __init__(self) -> None:
         super().__init__()
         self.direction = "maximize"
