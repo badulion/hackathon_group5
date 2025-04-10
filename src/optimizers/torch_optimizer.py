@@ -5,6 +5,7 @@ from einops import rearrange, repeat, einsum
 import numpy as np
 import torch
 import tqdm
+import time
 
 from tqdm import trange
 
@@ -34,7 +35,7 @@ class PhaseShift(torch.nn.Module):
 
 class TorchOptimizer:
 
-    def __init__(self, cost_function, max_iter: int = 1000) -> None:
+    def __init__(self, cost_function, max_iter: int = 5000) -> None:
         self.cost_fuction = cost_function
         self.max_iter = max_iter
 
@@ -68,7 +69,16 @@ class TorchOptimizer:
         model = PhaseShift().to(device)
         optmizer = torch.optim.AdamW(model.parameters(), lr=0.1)
 
-        pbar = trange(self.max_iter)
+        # Early stopping parameters
+        patience = 100  # Number of iterations to wait for improvement
+        best_loss = float("inf")
+        patience_counter = 0
+
+        # Timer to ensure the process fits within 5 minutes
+        start_time = time.time()
+        max_time = 5 * 58  # 5 minutes in seconds
+
+        pbar = trange(self.max_iter, desc="Optimizing", leave=True)
         for i in pbar:
             optmizer.zero_grad()
             shifted_field = model(field)
@@ -76,8 +86,28 @@ class TorchOptimizer:
             loss.backward()
             optmizer.step()
 
-            if i % 100 == 0:
-                print(f"Iteration {i}: Loss = {loss.item()}")
+            # Check for improvement
+            if loss.item() < best_loss:
+                best_loss = loss.item()
+                patience_counter = 0  # Reset patience counter
+            else:
+                patience_counter += 1
+
+            # Stop if patience is exceeded
+            if patience_counter >= patience:
+                print(f"Early stopping at iteration {i}: Loss = {loss.item()}")
+                break
+
+            # Stop if time exceeds 5 minutes
+            elapsed_time = time.time() - start_time
+            if elapsed_time > max_time:
+                print(
+                    f"Stopping due to time limit at iteration {i}: Loss = {loss.item()}"
+                )
+                break
+
+            # Update tqdm with the current loss
+            pbar.set_postfix({"loss": loss.item(), "best_loss": best_loss})
 
         coil_config = CoilConfig(
             phase=model.phase.cpu().detach().numpy(),

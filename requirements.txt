@@ -4,3 +4,6 @@ torch
 einops
 matplotlib
 tqdm
+ipywidgets
+sklearn
+pytorch-lightning
