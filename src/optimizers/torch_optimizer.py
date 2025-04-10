@@ -68,7 +68,7 @@ class TorchOptimizer:
     def optimize(self, simulation: Simulation):
         field, prop = self.field_and_prop(simulation)
         model = PhaseShift().to(device)
-        optmizer = torch.optim.Adam(model.parameters(), lr=0.1)
+        optmizer = torch.optim.AdamW(model.parameters(), lr=0.1)
 
         pbar = trange(self.max_iter)
         for i in pbar:
