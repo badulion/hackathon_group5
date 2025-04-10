@@ -22,8 +22,8 @@ class TorchB1HomogeneityCost:
         b1_plus_std = torch.std(b1_plus_magnitude)
         return b1_plus_mean / (b1_plus_std + 1e-6)
 
-    def calc_cost(self, field):
-        return -1 * self.b1_homogeneity_cost(field)
+    def calc_loss(self, field):
+        return -1 * self.b1_homogeneity_loss(field)
 
 
 class TorchB1HomogeneityCostSAR:
@@ -43,8 +43,8 @@ class TorchB1HomogeneityCostSAR:
     def sar_cost(self, field, properties):
         return torch.max(self.sars_calc(field, properties))
 
-    def calc_cost(self, field, prop, lambda_param=0.01):
+    def calc_loss(self, field, prop, lambda_param=0.01):
         b1_homogeneity_cost = TorchB1HomogeneityCost()
-        return -1 * b1_homogeneity_cost.b1_homogeneity_cost(
+        return b1_homogeneity_cost.b1_homogeneity_cost(
             field
         ) + lambda_param * self.sar_cost(field, prop)

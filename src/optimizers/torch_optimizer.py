@@ -1,8 +1,6 @@
 from ..data.simulation import Simulation, SimulationData, CoilConfig
 from skimage.measure import label, regionprops
 
-# from ..costs.base import BaseCost
-# from typing import Callable
 from einops import rearrange, repeat, einsum
 import numpy as np
 import torch
@@ -74,7 +72,7 @@ class TorchOptimizer:
         for i in pbar:
             optmizer.zero_grad()
             shifted_field = model(field)
-            loss = self.cost_fuction.calc_cost(shifted_field, prop)
+            loss = self.cost_fuction.calc_loss(shifted_field, prop)
             loss.backward()
             optmizer.step()
 
