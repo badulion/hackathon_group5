@@ -80,3 +80,9 @@ class TorchOptimizer:
 
             if i % 100 == 0:
                 print(f"Iteration {i}: Loss = {loss.item()}")
+
+        coil_config = CoilConfig(
+            phase=model.phase.cpu().detach().numpy(),
+            amplitude=model.amplitude.cpu().detach().numpy(),
+        )
+        return coil_config
