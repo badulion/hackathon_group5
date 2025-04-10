@@ -1,2 +1,2 @@
-from .b1_homogeneity import B1HomogeneityCost
-from .b1_homogeneity_minmax import B1HomogeneityMinMaxCost
+from .torch_cost_functions import TorchB1HomogeneityCost as B1HomogeneityCost
+from .torch_cost_functions import TorchB1HomogeneityCostSAR  as B1HomogeneitySARCost

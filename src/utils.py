@@ -17,29 +17,12 @@ def evaluate_coil_config(coil_config: CoilConfig,
     Returns:
         A dictionary containing the best coil configuration, cost, and cost improvement.
     """
-    default_coil_config = CoilConfig()
-
-    simulation_data = simulation(coil_config)
-    simulation_data_default = simulation(default_coil_config)
-
-    # Calculate cost for both configurations
-    default_coil_config_cost = cost_function(simulation_data_default)
-    best_coil_config_cost = cost_function(simulation_data)
-
-    # Calculate cost improvement
-    cost_improvement_absolute = (default_coil_config_cost - best_coil_config_cost)
-    cost_improvement_relative = (best_coil_config_cost - default_coil_config_cost) / default_coil_config_cost
+    
 
     # Create a dictionary to store the results
+    
     result = {
-        "best_coil_phase": list(coil_config.phase),
-        "best_coil_amplitude": list(coil_config.amplitude),
-        "best_coil_config_cost": best_coil_config_cost,
-        "default_coil_config_cost": default_coil_config_cost,
-        "cost_improvement_absolute": cost_improvement_absolute,
-        "cost_improvement_relative": cost_improvement_relative,
-        "cost_function_name": cost_function.__class__.__name__,
-        "cost_function_direction": cost_function.direction,
-        "simulation_data": simulation_data.simulation_name,
+        "best_coil_phase": [float(i) for i in coil_config.phase],
+        "best_coil_amplitude": [float(i) for i in coil_config.amplitude]
     }
     return result

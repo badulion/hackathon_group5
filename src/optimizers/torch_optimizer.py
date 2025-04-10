@@ -3,7 +3,7 @@ from skimage.measure import label, regionprops
 
 from tqdm import trange
 import torch
-import lightning.pytorch as pl
+import pytorch_lightning as pl
 from einops import repeat, einsum
 from skimage.measure import label, regionprops
 from torch.utils.data import DataLoader, Dataset
