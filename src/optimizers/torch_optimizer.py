@@ -13,11 +13,11 @@ from src.costs.torch_cost_functions import TorchB1HomogeneityCostSAR
 
 
 class Module(pl.LightningModule):
-    def __init__(self):
+    def __init__(self, cost_func):
         super(Module, self).__init__()
         self.phase = torch.nn.Parameter(torch.randn(8, dtype=torch.float32))
         self.amplitude = torch.nn.Parameter(torch.randn(8, dtype=torch.float32))
-        self.loss_fn = TorchB1HomogeneityCostSAR()
+        self.loss_fn = cost_func
 
     def _shift_phase(self, field):
         re_phase = torch.cos(self.phase) * self.amplitude
@@ -112,7 +112,7 @@ class TorchOptimizer:
             callbacks=[checkpoint_callback]
         )
 
-        module = Module()
+        module = Module(cost_func=self.cost_fuction)
 
         trainer.fit(module, dataloader)
 
