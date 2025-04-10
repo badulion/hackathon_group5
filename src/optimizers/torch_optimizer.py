@@ -116,7 +116,7 @@ class TorchOptimizer:
 
         trainer.fit(module, dataloader)
 
-        best_model = Module.load_from_checkpoint(checkpoint_callback.best_model_path)
+        best_model = Module.load_from_checkpoint(checkpoint_callback.best_model_path, cost_func=self.cost_fuction)
 
         coil_config = CoilConfig(
             phase=best_model.phase.cpu().detach().numpy(),
